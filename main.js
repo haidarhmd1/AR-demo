@@ -1,7 +1,7 @@
 import "./style.css";
 import UAParser from "ua-parser-js";
 
-checkDeviceAndIOS();
+// checkDeviceAndIOS();
 
 function checkDeviceAndIOS() {
   let parser = new UAParser();
