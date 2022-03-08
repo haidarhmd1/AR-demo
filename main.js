@@ -1,10 +1,9 @@
 import "./style.css";
 import UAParser from "ua-parser-js";
-import * as THREE from "three";
 
-checkIos();
+checkDeviceAndIOS();
 
-function checkIos() {
+function checkDeviceAndIOS() {
   let parser = new UAParser();
   let result = parser.getResult();
 
