@@ -31,13 +31,13 @@ async function checkDeviceAndIOS() {
 
   if (result.os.name !== "iOS") {
     document.querySelector(".iOS-container").remove();
-    navigator.xr.isSessionSupported("immersive-ar").then((supported) => {
-      if (!supported) {
-        window.body.innerHTML = "Web-XR not supported :/";
-      }
-      initWebXR();
-      animate();
-    });
+    // navigator.xr.isSessionSupported("immersive-ar").then((supported) => {
+    //   if (!supported) {
+    //     window.body.innerHTML = "Web-XR not supported :/";
+    //   }
+    initWebXR();
+    animate();
+    // });
     return;
   }
 }
@@ -64,7 +64,6 @@ function initWebXR() {
 
   // Append AR-Button to container
   document.body.appendChild(ARButton.createButton(renderer));
-
   // Now we can add the Geometry
   const geometry = new THREE.CylinderGeometry(0, 0.05, 0.2, 32).rotateX(
     Math.PI / 2
