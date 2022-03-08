@@ -3,8 +3,12 @@ import UAParser from "ua-parser-js";
 import * as THREE from "three";
 import { ARButton } from "three/examples/jsm/webxr/ARButton";
 
-let scene, camera, renderer;
+// Device Check relevant
 let parser, result;
+
+//THREE JS WEB-XR AR relevant
+let scene, camera, renderer;
+let controller;
 
 window.onload = () => {
   checkDeviceAndIOS();
@@ -32,6 +36,7 @@ async function checkDeviceAndIOS() {
         window.body.innerHTML = "Web-XR not supported :/";
       }
       initWebXR();
+      animate();
     });
     return;
   }
@@ -58,7 +63,43 @@ function initWebXR() {
   );
 
   // Append AR-Button to container
-  document.body.appendChild(
-    ARButton.createButton(renderer, { requiredFeatures: ["hit-test"] })
+  document.body.appendChild(ARButton.createButton(renderer));
+
+  // Now we can add the Geometry
+  const geometry = new THREE.CylinderGeometry(0, 0.05, 0.2, 32).rotateX(
+    Math.PI / 2
   );
+
+  function onSelect() {
+    const material = new THREE.MeshPhongMaterial({
+      color: 0xffffff,
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(0, 0, -0.3).applyMatrix4(controller.matrixWorld);
+    mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
+    scene.add(mesh);
+  }
+
+  // Add the controller for the AR
+  controller = renderer.xr.getController(0);
+  controller.addEventListener("select", onSelect);
+  scene.add(controller);
+
+  // For resize of window
+  window.addEventListener("resize", onWindowResize);
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+// add render loop
+function animate() {
+  renderer.setAnimationLoop(render);
+}
+
+function render() {
+  renderer.render(scene, camera);
 }
